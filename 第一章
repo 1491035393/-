@@ -32,7 +32,8 @@
                     子目录：
                         1.drawable：图片
                         2.layout：布局文件
-                        3.value：字符串
+                        3.value：字符串、样式、颜色等配置
+                        4.mipmap:应用图标，后缀表示分辨率，设备会根据分辨率高低自动选择加载那个
                 6.AndroidManifest.xml
                     整个android项目的配置文件，定义的四大组件需要在这个文件里注册，给应用程序添加权限说明等
                 7.test
@@ -68,3 +69,98 @@
                         setContentView(R.layout.hello_world_layout);              //调用视图hello_world_layout
                     }
                 }
+            
+          
+    1.3.5 详解项目中的资源
+      res/values/strings.xml文件：
+        <resources>
+          <string name="app_name">HelloWorld</string>
+        <resources>
+        上述代码在string.xml中定义了一个应用程序名的字符串，两种方式引用：
+            代码中：R.string.app_name
+            xml中：@string/app_name
+        string部分可以替换，引用图片资源替换成drawable,应用图标替换成mipmap,引用的布局文件替换成layout，以此类推
+        
+    1.3.6 详解build.gradle文件
+        Gradle是一个非常先进的项目构建工具，区别于传统的各种烦琐配置
+        最外层build.gradle文件：
+            buildscript {
+                repositories{
+                    jcenter()        //jcenter是一个代码托管库，声明这行配置后，可以引用jcenter上的开源项目
+                }
+                dependencies {
+                    classpath 'com.android.tools.build:gradle:2.2.0'   //声明gradle插件，gradle构建android项目时，需要声明这个插件，2.2.0是版本号
+                }
+            }
+            
+            allprojects {
+                repositories {
+                    jcenter()         //同上
+                }
+            }
+            
+        app目录下build.gradle文件：
+            apply plugin: 'com.android.application'     //应用插件，两种值可选：com.android.application表示这是一个应用程序模块，com.android.library表示这是一个库模块。
+            //应用程序模块：可直接运行，库模块：依附于别的应用程序模块运行
+            
+            android {
+                compileSdkVersion 24                //编译版本，24表示用于android7的sdk编译
+                buildToolsVersion "24.0.2"          //构建工具的版本
+                defaultConfig {                     //defaultconfig 进行更多的细节配置
+                    applicationId "com.example.helloworld"      //指定项目的包名
+                    minSdkVersion 15                            //指定项目最低兼容的android版本，15为最低兼容到android
+                    targetSdkVersion 24                         //指定的值表示你在该目标已经做过充分的测试
+                    versionCode 1                               //项目的版本号
+                    versionName "1.0"                           //项目的版本名
+                }
+                buildTypes {                         //buildTypes闭包指定生成安装文件的相关配置，其下一般只有debug和release两种闭包
+                    release {                           //release闭包用于指定生成正式版本安装文件的配置
+                        minifyEnabled false             //minifyEnabled用于指定是否对项目的代码进行混淆，true表示混淆，false表示不混淆
+                        proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                            'proguard-rules.pro'            //proguardFiles用于指定混淆时使用的规则文件，第一个proguard-android.txt是在android sdk目录下的，里面是所有项目通用的混淆规则
+                            //第二个 proguard-rules.pro是在当前项目根目录下，里面可以编写当前项目特有的混淆规则
+                    }
+                }
+            }
+            
+            dependencies {                                          //dependencies闭包指定当前项目所有的依赖关系，android studio项目通常有三个依赖，本地依赖、库依赖、远程依赖
+                compile fileTree(dir:'libs',include:['*.jar'])      //本地依赖声明，将libs目录下所有.jar后缀的文件都添加到项目的构建路径中
+                compile 'com.android.support:appcompat-v7:24.2.1'   //远程依赖声明，其中com.android.support是域名部分，用于和其他公司的库做区分
+                // appcompat-v7是组名称，用于同一个公司中不同库做区分；24.2.1是版本号
+                //库依赖这里没有涉及，基本格式：compile project+库名称，例：库模块名称为helper的，添加依赖关系为：compile project(':helper')
+                testCompile 'junit:junit:4.12'                  //声明测试用例库
+            }
+            
+1.4 日志工具介绍
+    1.4.1 使用日志工具
+        log.v():打印最为琐碎、意义最小的日志信息
+        log.d():打印一些调试信息
+        Log.i():打印一些比较重要的数据
+        Log.w():打印一些警告信息
+        Log.e():打印程序中的错误信息
+        
+        每个方法都有不同的重载
+        使用举例：Log.d("HelloWorldActivity","onCreate execute")
+        Log.d()中传入两个参数，第一个是tag，一般传入当前类名就好，主要对打印信息进行过滤，第二个是msg，就是想要打印的内容
+
+        1.4.2 为什么不适用system.out
+            system.out几乎只有敲代码时方便一个好处，但是它打印不可控制，打印时间不确定，不能添加过滤器，日志没有区分等级
+            
+            而log在android studio底部有一个android monitor，对过滤器进行配置之后可以轻松得到打印的信息，而且过滤器支持正则表达式
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
