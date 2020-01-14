@@ -1,0 +1,70 @@
+第一章 开始启程
+1.1.3 android应用开发特色
+  1.四大组件
+    活动（Actiivity）：应用程序的门面，所有看得到的东西董事放在活动中
+    服务（Service）：后台默默运行，退出应用服务仍然可以继续
+    广播接收器（Broadcast Receiver）：接收来自各处的广播消息
+    内容提供器（Content provider）：用于应用程序之间共享数据
+  2.丰富的系统空间
+  3.sqlite数据库：轻量级、运算速度极快的嵌入式关系型数据库，支持标准sql语句，使存储和读取数据变得非常方便
+  4.强大的多媒体
+  5.地理位置定位
+ 
+1.2 搭建开发环境
+
+1.3第一个Android程序
+    1.3.4 分析第一个Android程序
+        文件项目结构在project下：
+            1..gradle和.idea
+                Android studio 自动生成的文件
+            2.app
+                项目的代码、资源等内容几乎都是放在这个文件夹，开发工作基本在此目录下进行
+                1.build
+                    编译自动生成的文件
+                2.libs
+                    第三方jar包放置文件，使用到的第三方包必须放入这个文件夹
+                3.androidTest
+                    用来编写测试用例
+                4.java
+                    放置所有的java代码
+                5.res
+                    所有的图片、布局、字符串等资源都放在这个目录下
+                    子目录：
+                        1.drawable：图片
+                        2.layout：布局文件
+                        3.value：字符串
+                6.AndroidManifest.xml
+                    整个android项目的配置文件，定义的四大组件需要在这个文件里注册，给应用程序添加权限说明等
+                7.test
+                    编写Unit test测试用例
+                8..gitignore
+                    git版本控制文件排除
+                9.app.iml
+                    自动生成文件。无需关注
+                10.build.gradle
+                    app模块的gradle构建脚本，指定很多项目的相关配置
+                11.proguard-rules.pro
+                    用于指定项目代码的混淆规则，不希望别人破解，通常将代码混淆，让破解者难以阅读                
+            3.bulid
+                编译时自动生成的文件
+            4..gitignore
+                git版本控制排除文件
+                
+        第一个程序Hello word代码分析：
+            Android-Manifest.xml文件中：
+                 <activity android:name=".HelloWorldActivity">                               //活动注册标签
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN"/>                     //指定这个活动是项目的主活动
+                    <category android:name="android.intent.category.LAUNCHER"/>             //指定手机点击应用图标时，首先启动的是这个活动
+                </intent-filter>
+            </activity> 
+            
+            java下HelloWorldActivity文件：
+                public class HelloWorldActivity extends AppCompatActivity {         //Activity是android系统提供的活动基类，所有活动必须继承它或它的子类（appcompatactibity是它的子类）
+
+                    @Override
+                    protected void onCreate(Bundle savedInstanceState) {           //onCreat()方法是活动创建时必定要执行的方法
+                        super.onCreate(savedInstanceState);
+                        setContentView(R.layout.hello_world_layout);              //调用视图hello_world_layout
+                    }
+                }
